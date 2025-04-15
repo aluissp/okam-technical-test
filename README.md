@@ -24,29 +24,29 @@ DATABASE_URL="postgresql://johndoe:randompassword@localhost:5432/mydb?schema=pub
 bun install
 ```
 
-4. Then, run the development server:
-
-```bash
-bun dev
-```
-
-5. Execute migrations
+4. Execute migrations
 
 ```sh
 bunx prisma migrate dev
 bunx prisma generate
 ```
 
-6. Seed the database executing this script:
+5. Seed the database executing this script:
 
 ```sh
 bun run seed
 ```
 
-7. Generate next-auth secret
+6. Generate next-auth secret
 
 ```sh
 bunx auth secret
+```
+
+7. Finally, run the development server:
+
+```bash
+bun dev
 ```
 
 ### Default credentials
