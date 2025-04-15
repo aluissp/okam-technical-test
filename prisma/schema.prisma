@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "./generated"
+  // output   = "./generated"
 }
 
 datasource db {
@@ -15,27 +15,32 @@ model Organization {
 }
 
 model User {
-  id             String       @id @default(uuid())
-  email          String       @unique
+  id             String   @id @default(uuid())
+  name           String
+  email          String   @unique
   password       String
-  createdAt      DateTime     @default(now())
+  createdAt      DateTime @default(now())
   organizationId String
-  tasks          Task[]
-  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  // Relations
+  tasks        Task[]
+  organization Organization @relation(fields: [organizationId], references: [id])
 }
 
 model Task {
-  id          String    @id @default(uuid())
+  id          String   @id @default(uuid())
   title       String
   description String
   dueDate     DateTime
-  completed   Boolean   @default(false)
-  deleted     Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  completed   Boolean  @default(false)
+  deleted     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   userId      String
-  histories   History[]
-  user        User      @relation(fields: [userId], references: [id])
+
+  // Relations
+  histories History[]
+  user      User      @relation(fields: [userId], references: [id])
 }
 
 model History {
@@ -43,6 +48,8 @@ model History {
   field    String
   oldValue String
   newValue String
-  taskId   String
-  task     Task   @relation(fields: [taskId], references: [id])
+
+  // Relations
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id])
 }
