@@ -13,7 +13,8 @@ export const authConfig: NextAuthConfig = {
 	session: { strategy: 'jwt' },
 	callbacks: {
 		authorized({ auth, request: { nextUrl } }) {
-			return true;
+			// Logged in users are authenticated, otherwise redirect to login page
+			return !!auth?.user;
 		},
 
 		jwt({ token, user }) {
