@@ -43,6 +43,12 @@ bunx prisma generate
 bun run seed
 ```
 
+7. Generate next-auth secret
+
+```sh
+bunx auth secret
+```
+
 ### Default credentials
 
 - **email**: luisprg05@gmail.com
