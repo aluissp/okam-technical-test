@@ -1,4 +1,4 @@
-import { getUserSessionServer } from '@/actions/auth';
+import { getUserSession } from '@/actions/auth';
 import { Navbar } from '@/components/ui/navbar';
 import { redirect } from 'next/navigation';
 
@@ -7,7 +7,7 @@ interface Props {
 }
 
 export default async function DashboardLayout({ children }: Props) {
-	const session = await getUserSessionServer();
+	const session = await getUserSession();
 
 	if (!session) redirect('/api/auth/signin');
 

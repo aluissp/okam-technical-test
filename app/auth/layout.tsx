@@ -1,14 +1,13 @@
+import { getUserSession } from '@/actions/auth';
 import { redirect } from 'next/navigation';
-
-// import { auth } from '@/lib/auth';
 
 interface Props {
 	children: React.ReactNode;
 }
 export default async function AuthLayout({ children }: Props) {
-	// const session = await auth();
+	const session = await getUserSession();
 
-	// if (session?.user) redirect('/');
+	if (session?.user) redirect('/');
 
 	return (
 		<main className='flex justify-center'>

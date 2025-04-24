@@ -1,9 +1,9 @@
-import { LoginForm } from '../../../components/auth/LoginForm';
+import { LoginForm } from '@/components/auth/LoginForm';
 
-export default function LoginPage() {
+export default async function LoginPage() {
 	return (
-		<div className='flex flex-col min-h-screen pt-32 sm:pt-52'>
-			<h1 className='text-4xl mb-5'>Login</h1>
+		<div className='flex flex-col min-h-screen pt-32'>
+			<h1 className='text-4xl mb-5 text-center'>Create a new account</h1>
 
 			<LoginForm />
 		</div>
