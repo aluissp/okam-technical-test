@@ -1,10 +1,22 @@
 import prisma from '@/lib/prisma';
 import { Task, User } from '@/prisma/generated';
 import { TaskFormData } from '@/interfaces/models/task.interface';
+import { filterOptions, FilterOptions } from '@/utils/filter-options';
 
-export const getAllTasks = async (): Promise<{ tasks?: Task[]; error?: string }> => {
+export const getAllTasks = async (
+	filter?: FilterOptions
+): Promise<{ tasks?: Task[]; error?: string }> => {
+	let whereClause = {};
+
+	if (filter === filterOptions.all) whereClause = { deleted: false };
+	else if (filter === filterOptions.completed) whereClause = { completed: true, deleted: false };
+	else if (filter === filterOptions.deleted) whereClause = { deleted: true };
+
 	try {
-		const tasks = await prisma.task.findMany();
+		const tasks = await prisma.task.findMany({
+			where: whereClause,
+			include: { user: true },
+		});
 		return { tasks };
 	} catch (_error) {
 		return { error: 'Error retrieving tasks' };
@@ -17,9 +29,7 @@ export const createNewTask = async (
 ): Promise<{ task?: Task; error?: string }> => {
 	try {
 		const user = await prisma.user.findUnique({
-			where: {
-				id: userId,
-			},
+			where: { id: userId },
 		});
 
 		if (!user) {
@@ -123,6 +133,50 @@ export const getTaskById = async (
 		if (task.user.organizationId !== user.organizationId) {
 			return { error: 'You are not authorized to view this task' };
 		}
+
+		return { task };
+	} catch (_error) {
+		return { error: 'Error retrieving task' };
+	}
+};
+
+export const deleteTaskById = async (
+	taskId: string,
+	userId: string
+): Promise<{ task?: Task & { user: User }; error?: string }> => {
+	try {
+		const user = await prisma.user.findUnique({
+			where: { id: userId },
+		});
+
+		if (!user) {
+			return { error: 'User not found' };
+		}
+
+		const task = await prisma.task.findUnique({
+			where: { id: taskId },
+			include: { user: true },
+		});
+
+		if (!task) {
+			return { error: 'Task not found' };
+		}
+
+		if (task.user.organizationId !== user.organizationId) {
+			return { error: 'You are not authorized to delete this task' };
+		}
+
+		// Soft delete the task
+		const deletedTask = await prisma.task.update({
+			where: { id: taskId },
+			data: { deleted: true },
+		});
+
+		if (!deletedTask) {
+			return { error: 'Error deleting task' };
+		}
+
+		// Optionally, you can return the deleted task or a success message
 
 		return { task };
 	} catch (_error) {
