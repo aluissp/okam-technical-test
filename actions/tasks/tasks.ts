@@ -1,10 +1,17 @@
 'use server';
 
-import { createNewTask, getAllTasks, getTaskById, updateTask } from '@/controllers/tasks/tasks';
+import {
+	createNewTask,
+	deleteTaskById,
+	getAllTasks,
+	getTaskById,
+	updateTask,
+} from '@/controllers/tasks/tasks';
 import { TaskFormData, ParsedTask } from '@/interfaces/models/task.interface';
 import { Response } from '@/interfaces/response.interface';
 import { FilterOptions } from '@/utils/filter-options';
 import { formatDate } from '@/utils/format-date';
+import { revalidatePath } from 'next/cache';
 
 export const getAllTasksAction = async (filter: FilterOptions): Promise<Response<ParsedTask[]>> => {
 	const { tasks, error } = await getAllTasks(filter);
@@ -61,12 +68,14 @@ export const getTaskByIdAction = async (taskId: string) => {
 export const deleteTaskByIdAction = async (taskId: string) => {
 	const userId = 'd85b3c83-b68e-411d-aac8-c55794c4d21e';
 
-	const { error, task } = await getTaskById(taskId, userId);
+	const { error, task } = await deleteTaskById(taskId, userId);
+
+	revalidatePath('/');
 
 	if (error || !task) return { error };
 
 	return {
-		message: 'Task retrieved successfully',
+		message: 'Task deleted successfully',
 		data: { ...task, dueDate: formatDate(task.dueDate) },
 	};
 };
