@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useFormStatus } from 'react-dom';
 import clsx from 'clsx';
 import { login } from '@/actions/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
