@@ -1,8 +1,9 @@
-import { IoAlbumsOutline, IoPersonOutline } from 'react-icons/io5';
+import { IoAddOutline, IoAlbumsOutline, IoPersonOutline } from 'react-icons/io5';
 import { NavbarItem } from './NavbarItem';
 
 const navbarItems = [
 	{ name: 'Tasks', href: '/', icon: <IoAlbumsOutline size={20} /> },
+	{ name: 'Create new task', href: '/task/new-task', icon: <IoAddOutline size={20} /> },
 	{
 		name: 'Profile',
 		href: '/profile',
