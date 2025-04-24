@@ -12,7 +12,7 @@ export default async function DashboardLayout({ children }: Props) {
 			<Navbar />
 
 			{/* Content */}
-			<main className='px-0 sm:px-10'>{children}</main>
+			<main className='max-w-7xl mx-auto mt-8'>{children}</main>
 		</>
 	);
 }

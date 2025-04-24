@@ -12,12 +12,13 @@
 
 @theme inline {
 	--color-background: var(--background);
-  --color-text: var(--text-color)
-  --color-navbar: var(--navbar)
-  --color-primary: var(--primary)
-  --color-info: var(--info)
-  --color-warning: var(--warning)
-  --color-danger: var(--danger)
+	--color-text: var(--text-color);
+	--color-navbar: var(--navbar);
+	--color-dark: var(--navbar);
+	--color-primary: var(--primary);
+	--color-info: var(--info);
+	--color-warning: var(--warning);
+	--color-danger: var(--danger);
 	--font-sans: var(--font-geist-sans);
 	--font-mono: var(--font-geist-mono);
 
@@ -35,6 +36,6 @@
 
 body {
 	background: var(--background);
-	color: var(--foreground);
+	color: var(--text-color);
 	font-family: Arial, Helvetica, sans-serif;
 }
