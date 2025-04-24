@@ -3,7 +3,7 @@ import { Title } from '@/components/ui/title/Title';
 import { getAllTasksAction } from '@/actions/tasks/tasks';
 
 export default async function DashboardPage() {
-	const tasks = await getAllTasksAction();
+	const { data: tasks } = await getAllTasksAction();
 
 	return (
 		<>
