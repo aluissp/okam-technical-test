@@ -1,5 +1,5 @@
 import { formatDate } from '@/utils/format-date';
-import { History } from '../../prisma/generated/index';
+import { History } from '@/prisma/generated/index';
 
 interface Props {
 	histories: History[];

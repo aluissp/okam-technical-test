@@ -78,8 +78,6 @@ export const updateTask = async (
 
 		if (!existingTask) return { error: 'Task not found' };
 
-		if (existingTask.deleted) return { error: 'Task is deleted' };
-
 		// Check if the user is the owner of the task
 		if (existingTask.userId !== userId) {
 			return { error: 'You are not authorized to update this task' };

@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { deleteTaskByIdAction } from '@/actions/tasks/tasks';
+import { activateTaskByIdAction, deleteTaskByIdAction } from '@/actions/tasks/tasks';
 import { toast } from 'sonner';
 
 interface Props {
@@ -10,8 +10,16 @@ interface Props {
 }
 
 export const TaskDeleteButton = ({ taskId, isDeleted }: Props) => {
-	const handleDelete = async () => {
-		const { error, message } = await deleteTaskByIdAction(taskId);
+	const handleToggle = async () => {
+		let resp;
+
+		if (isDeleted) {
+			resp = await activateTaskByIdAction(taskId);
+		} else {
+			resp = await deleteTaskByIdAction(taskId);
+		}
+
+		const { error, message } = resp;
 
 		if (error) toast.error(error);
 
@@ -20,13 +28,13 @@ export const TaskDeleteButton = ({ taskId, isDeleted }: Props) => {
 
 	return (
 		<button
-			onClick={handleDelete}
-			className={clsx('py-1 px-1 rounded hover:bg-danger', {
-				'cursor-not-allowed hover:bg-transparent': isDeleted,
+			onClick={handleToggle}
+			className={clsx('py-1 px-1 rounded', {
+				'hover:bg-primary hover:text-white': isDeleted,
+				'hover:bg-danger': !isDeleted,
 			})}
-			disabled={isDeleted}
 		>
-			Delete
+			{isDeleted ? 'Restore' : 'Delete'}
 		</button>
 	);
 };

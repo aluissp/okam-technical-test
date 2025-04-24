@@ -86,3 +86,29 @@ export const deleteTaskByIdAction = async (taskId: string) => {
 		data: { ...task, dueDate: formatDate(task.dueDate) },
 	};
 };
+
+export const activateTaskByIdAction = async (taskId: string) => {
+	const session = await getUserSession();
+	const userId = session?.user?.id;
+
+	const taskToUpdate = await getTaskById(taskId, userId!);
+
+	const taskData: TaskFormData = {
+		completed: !!taskToUpdate.task?.completed,
+		description: taskToUpdate.task?.description ?? '',
+		dueDate: formatDate(taskToUpdate.task?.dueDate ?? new Date()),
+		title: taskToUpdate.task?.title ?? '',
+		deleted: false,
+	};
+
+	const { error, task } = await updateTask(taskId, taskData, userId!);
+
+	revalidatePath('/');
+
+	if (error || !task) return { error };
+
+	return {
+		message: 'Task activated successfully',
+		data: { ...task, dueDate: formatDate(task.dueDate) },
+	};
+};
