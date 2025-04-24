@@ -1,3 +1,4 @@
+import { formatDate } from '@/utils/format-date';
 import { History } from '../../prisma/generated/index';
 
 interface Props {
@@ -11,11 +12,11 @@ export const TaskHistory = ({ histories }: Props) => {
 					<h2>Task History</h2>
 					<ul>
 						{histories.map(history => (
-							<li key={history.id} className='border rounded-lg'>
+							<li key={history.id} className='border rounded-lg my-2'>
 								<p>Field: {history.field}</p>
 								<p>Old value: {history.oldValue}</p>
 								<p>New value: {history.newValue}</p>
-								{/* <p>Change at: {formatDate(history.changeAt??)}</p> */}
+								<p>Change at: {formatDate(history.changeAt)}</p>
 							</li>
 						))}
 					</ul>

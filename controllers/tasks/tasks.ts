@@ -111,9 +111,7 @@ export const updateTask = async (
 
 		// Update the task
 		const updatedTask = await prisma.task.update({
-			where: {
-				id: taskId,
-			},
+			where: { id: taskId },
 			data: {
 				...task,
 				dueDate,
