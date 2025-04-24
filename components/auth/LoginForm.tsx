@@ -1,15 +1,15 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
+import { toast } from 'sonner';
 import clsx from 'clsx';
-import { login } from '@/actions/auth';
+import { signIn } from 'next-auth/react';
+import { redirect } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UserLogin, userLoginSchema } from '@/interfaces/models/user.interface';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 export const LoginForm = () => {
-	const [errorMessage, setErrorMessage] = useState('');
 	const {
 		register,
 		handleSubmit,
@@ -17,19 +17,20 @@ export const LoginForm = () => {
 	} = useForm<UserLogin>({ resolver: zodResolver(userLoginSchema) });
 
 	const onSubmit: SubmitHandler<UserLogin> = async data => {
-		setErrorMessage('');
 		const { email, password } = data;
 
-		// Server action
-		const resp = await login(email, password);
+		const resp = await signIn('credentials', {
+			email,
+			password,
+			redirect: false,
+		});
 		console.log({ resp });
-
-		if (!resp.ok) {
-			setErrorMessage(resp.message);
-			return;
+		if (resp?.error) {
+			toast.error(resp.error);
+		} else {
+			toast.success('Login successful');
+			redirect('/');
 		}
-
-		window.location.replace('/');
 	};
 	return (
 		<form
@@ -38,6 +39,7 @@ export const LoginForm = () => {
 		>
 			<label htmlFor='email'>Email</label>
 			<input
+				id='email'
 				className={clsx('px-5 py-2 border bg-gray-200 rounded mb-5', {
 					'border-red-500': errors.email,
 				})}
@@ -45,23 +47,22 @@ export const LoginForm = () => {
 				{...register('email')}
 			/>
 
-			<label htmlFor='email'>Password</label>
+			<span className='text-red-500 text-sm mb-2'>{errors.email?.message}</span>
+
+			<label htmlFor='password'>Password</label>
 			<input
+				id='password'
 				className={clsx('px-5 py-2 border bg-gray-200 rounded mb-5', {
 					'border-red-500': errors.password,
 				})}
 				type='password'
 				{...register('password')}
 			/>
+			<span className='text-red-500 text-sm mb-2'>{errors.password?.message}</span>
 
 			<div className='flex h-8 items-end space-x-1' aria-live='polite' aria-atomic='true'></div>
 
-			<span className='text-red-500'>{errorMessage} </span>
-
-			<button
-				type='submit'
-				className='bg-blue-600 text-white rounded-lg p-2 mb-5 hover:bg-blue-700'
-			>
+			<button type='submit' className='bg-blue-600 text-white rounded-lg p-2 mb-5 '>
 				Login
 			</button>
 
