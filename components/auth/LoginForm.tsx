@@ -22,19 +22,19 @@ export const LoginForm = () => {
 
 		// Server action
 		const resp = await login(email, password);
+		console.log({ resp });
 
 		if (!resp.ok) {
 			setErrorMessage(resp.message);
 			return;
 		}
 
-		await login(email.toLowerCase(), password);
 		window.location.replace('/');
 	};
 	return (
 		<form
 			onSubmit={handleSubmit(onSubmit)}
-			className='flex flex-col border p-5 rounded-lg shadow-md bg-white'
+			className='flex flex-col border p-5 rounded-lg shadow-md bg-white text-dark'
 		>
 			<label htmlFor='email'>Email</label>
 			<input

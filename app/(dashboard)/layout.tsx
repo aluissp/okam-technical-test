@@ -1,11 +1,15 @@
+import { getUserSessionServer } from '@/actions/auth';
 import { Navbar } from '@/components/ui/navbar';
+import { redirect } from 'next/navigation';
 
 interface Props {
 	children: React.ReactNode;
 }
 
 export default async function DashboardLayout({ children }: Props) {
-	// Todo: Implement authentication
+	const session = await getUserSessionServer();
+
+	if (!session) redirect('/api/auth/signin');
 
 	return (
 		<>

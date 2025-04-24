@@ -1,12 +1,13 @@
 import { IoAddOutline, IoAlbumsOutline, IoPersonOutline } from 'react-icons/io5';
 import { NavbarItem } from './NavbarItem';
+import { LogoutButton } from '../buttons/LogoutButton';
 
 const navbarItems = [
 	{ name: 'Tasks', href: '/', icon: <IoAlbumsOutline size={20} /> },
 	{ name: 'Create new task', href: '/task/new-task', icon: <IoAddOutline size={20} /> },
 	{
 		name: 'Profile',
-		href: '/profile',
+		href: '/user',
 		icon: <IoPersonOutline size={20} />,
 	},
 ];
@@ -24,7 +25,7 @@ export const Navbar = () => {
 						<NavbarItem key={item.href} {...item} />
 					))}
 					{/* Logout button */}
-					{/* <LogoutButton /> */}
+					<LogoutButton />
 				</div>
 			</div>
 		</nav>

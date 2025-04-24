@@ -1,50 +1,30 @@
 'use server';
 
-import { AuthRegisterResponse } from '@/interfaces/auth.interface';
 import prisma from '@/lib/prisma';
 import bcryptjs from 'bcryptjs';
 
-/**
- * Registers a new user in the database.
- *
- * @param {string} name - The name of the user.
- * @param {string} email - The email address of the user.
- * @param {string} password - The password of the user.
- * @param {string} organizationId - The ID of the organization the user belongs to.
- * @returns {Promise<AuthRegisterResponse>} A promise that resolves with the registration response, including the status and user data.
- */
-export const registerUser = async (
-	name: string,
-	email: string,
-	password: string,
-	organizationId: string
-): Promise<AuthRegisterResponse> => {
-	try {
-		const user = await prisma.user.create({
-			data: {
-				name: name,
-				email: email.toLowerCase(),
-				password: bcryptjs.hashSync(password),
-				organization: { connect: { id: organizationId } },
-			},
-			select: {
-				id: true,
-				name: true,
-				email: true,
-				organizationId: true,
-				createdAt: true,
-			},
-		});
+export const signInEmailPassword = async (email: string, name: string, password: string) => {
+	if (!email || !password) return null;
 
-		return {
-			ok: true,
-			user: user,
-			message: 'User created successfully',
-		};
-	} catch (_error) {
-		return {
-			ok: false,
-			message: 'User creation failed',
-		};
-	}
+	const user = await prisma.user.findUnique({ where: { email } });
+
+	if (!user) return await createUser(name, email, password);
+
+	if (!bcryptjs.compareSync(password, user.password ?? '')) return null;
+
+	return user;
+};
+
+const createUser = async (name: string, email: string, password: string) => {
+	const organizationId = 'f89d2ac9-494b-4316-b475-e1aec06b9f60';
+	const user = await prisma.user.create({
+		data: {
+			name,
+			email,
+			organizationId,
+			password: bcryptjs.hashSync(password),
+		},
+	});
+
+	return user;
 };

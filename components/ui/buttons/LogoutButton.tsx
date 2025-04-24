@@ -7,7 +7,7 @@ export const LogoutButton = () => {
 	return (
 		<button
 			onClick={() => logout()}
-			className='flex items-center gap-2 p-2 rounded-md bg-gray-50 hover:bg-sky-100 transition-colors hover:text-blue-600'
+			className='flex items-center gap-2 px-2 font-semibold hover:text-primary transition-colors'
 		>
 			<IoPowerOutline size={20} />
 			<div className='hidden md:block'>Sign Out</div>
