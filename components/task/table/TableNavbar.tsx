@@ -1,4 +1,9 @@
-import { IoAlbumsOutline, IoCheckmarkOutline, IoTrashOutline } from 'react-icons/io5';
+import {
+	IoAlbumsOutline,
+	IoCheckmarkOutline,
+	IoTimerOutline,
+	IoTrashOutline,
+} from 'react-icons/io5';
 import { NavbarItem } from '../../ui/navbar';
 import { filterOptions } from '@/utils/filter-options';
 
@@ -8,6 +13,11 @@ const navbarItems = [
 		name: 'Completed tasks',
 		href: `/?filter=${filterOptions.completed}`,
 		icon: <IoCheckmarkOutline size={15} />,
+	},
+	{
+		name: 'Pending tasks',
+		href: `/?filter=${filterOptions.pending}`,
+		icon: <IoTimerOutline size={15} />,
 	},
 	{
 		name: 'Deleted tasks',

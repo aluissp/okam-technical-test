@@ -13,6 +13,7 @@ export const getAllTasks = async (
 
 	if (filter === filterOptions.all) whereClause = { deleted: false };
 	else if (filter === filterOptions.completed) whereClause = { completed: true, deleted: false };
+	else if (filter === filterOptions.pending) whereClause = { completed: false, deleted: false };
 	else if (filter === filterOptions.deleted) whereClause = { deleted: true };
 
 	try {
