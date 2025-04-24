@@ -43,3 +43,4 @@ postgres
 prisma/generated
 .vscode
 __snapshots__
+.swc
