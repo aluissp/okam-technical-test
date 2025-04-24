@@ -1,12 +1,14 @@
 import prisma from '@/lib/prisma';
-import { Task, User } from '@/prisma/generated';
+import { History, Task, User } from '@/prisma/generated';
 import { TaskFormData } from '@/interfaces/models/task.interface';
 import { filterOptions, FilterOptions } from '@/utils/filter-options';
 
 export const getAllTasks = async (
 	filter?: FilterOptions
 ): Promise<{ tasks?: Task[]; error?: string }> => {
-	let whereClause = {};
+	let whereClause;
+
+	if (!filter) whereClause = { deleted: false };
 
 	if (filter === filterOptions.all) whereClause = { deleted: false };
 	else if (filter === filterOptions.completed) whereClause = { completed: true, deleted: false };
@@ -62,17 +64,13 @@ export const updateTask = async (
 ): Promise<{ task?: Task; error?: string }> => {
 	try {
 		const user = await prisma.user.findUnique({
-			where: {
-				id: userId,
-			},
+			where: { id: userId },
 		});
 
 		if (!user) return { error: 'User not found' };
 
 		const existingTask = await prisma.task.findUnique({
-			where: {
-				id: taskId,
-			},
+			where: { id: taskId },
 		});
 
 		if (!existingTask) return { error: 'Task not found' };
@@ -83,6 +81,24 @@ export const updateTask = async (
 		if (existingTask.userId !== userId) {
 			return { error: 'You are not authorized to update this task' };
 		}
+
+		// Create histories of the changes
+		const historiesPromises = Object.entries(task)
+			.filter(([key, value]) => {
+				return existingTask[key as keyof Task] !== value && key !== 'userId' && key !== 'deleted';
+			})
+			.map(([key, value]) => {
+				return prisma.history.create({
+					data: {
+						taskId,
+						field: key,
+						oldValue: existingTask[key as keyof Task].toString(),
+						newValue: value.toString(),
+					},
+				});
+			});
+
+		await Promise.all(historiesPromises);
 
 		const dueDate = new Date(task.dueDate);
 
@@ -104,14 +120,14 @@ export const updateTask = async (
 
 		return { task: updatedTask };
 	} catch (_error) {
-		return { error: 'Error creating task' };
+		return { error: 'Error updating task' };
 	}
 };
 
 export const getTaskById = async (
 	taskId: string,
 	userId: string
-): Promise<{ task?: Task & { user: User }; error?: string }> => {
+): Promise<{ task?: Task & { user: User; histories: History[] }; error?: string }> => {
 	try {
 		const user = await prisma.user.findUnique({
 			where: { id: userId },
@@ -123,7 +139,7 @@ export const getTaskById = async (
 
 		const task = await prisma.task.findUnique({
 			where: { id: taskId },
-			include: { user: true },
+			include: { user: true, histories: true },
 		});
 
 		if (!task) {

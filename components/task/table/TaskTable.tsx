@@ -62,7 +62,7 @@ export const TaskTable = ({ tasks }: Props) => {
 						</td>
 						<td className='px-4 py-2'>
 							<Link
-								href={`/task/history/${task.id}`}
+								href={`/task/history-task/${task.id}`}
 								className='hover:bg-zinc-800 py-1 px-1 rounded'
 							>
 								History
