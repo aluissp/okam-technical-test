@@ -1,4 +1,4 @@
-import { Task } from '@/prisma/generated';
+import { Task, User } from '@/prisma/generated';
 import { boolean, infer as Infer, object, string } from 'zod';
 
 export const newTaskSchema = object({
@@ -14,8 +14,9 @@ export const newTaskSchema = object({
 	completed: boolean(),
 });
 
-export type NewTask = Infer<typeof newTaskSchema>;
+export type TaskFormData = Infer<typeof newTaskSchema>;
 
 export type ParsedTask = Omit<Task, 'dueDate'> & {
 	dueDate: string;
+	user?: User;
 };
