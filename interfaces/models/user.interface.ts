@@ -17,5 +17,3 @@ export const userLoginSchema = object({
 export type UserLogin = Infer<typeof userLoginSchema>;
 
 export type UserRegister = Infer<typeof userRegisterSchema>;
-
-export type User = UserRegister & { id: string; password?: string };
