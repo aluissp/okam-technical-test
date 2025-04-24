@@ -14,7 +14,9 @@ export const newTaskSchema = object({
 	completed: boolean(),
 });
 
-export type TaskFormData = Infer<typeof newTaskSchema>;
+export type TaskFormData = Infer<typeof newTaskSchema> & {
+	deleted?: boolean;
+};
 
 export type ParsedTask = Omit<Task, 'dueDate'> & {
 	dueDate: string;
