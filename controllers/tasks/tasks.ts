@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma';
-import { Task } from '@/prisma/generated';
+import { Task, User } from '@/prisma/generated';
 import { TaskFormData } from '@/interfaces/models/task.interface';
 
 export const getAllTasks = async (): Promise<{ tasks?: Task[]; error?: string }> => {
@@ -101,12 +101,10 @@ export const updateTask = async (
 export const getTaskById = async (
 	taskId: string,
 	userId: string
-): Promise<{ task?: Task; error?: string }> => {
+): Promise<{ task?: Task & { user: User }; error?: string }> => {
 	try {
 		const user = await prisma.user.findUnique({
-			where: {
-				id: userId,
-			},
+			where: { id: userId },
 		});
 
 		if (!user) {

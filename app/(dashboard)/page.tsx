@@ -48,7 +48,10 @@ export default async function DashboardPage() {
 								<td className='px-4 py-2'>{task.dueDate}</td>
 								<td className='px-4 py-2'>{task.completed ? 'Yes' : 'No'}</td>
 								<td className='px-4 py-2'>
-									<Link href='#' className='hover:bg-info py-1 px-1 rounded'>
+									<Link
+										href={`/task/view-task/${task.id}`}
+										className='hover:bg-info py-1 px-1 rounded'
+									>
 										View
 									</Link>
 								</td>
