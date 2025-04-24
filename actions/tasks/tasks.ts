@@ -12,6 +12,7 @@ import { Response } from '@/interfaces/response.interface';
 import { FilterOptions } from '@/utils/filter-options';
 import { formatDate } from '@/utils/format-date';
 import { revalidatePath } from 'next/cache';
+import { getUserSession } from '../auth';
 
 export const getAllTasksAction = async (filter: FilterOptions): Promise<Response<ParsedTask[]>> => {
 	const { tasks, error } = await getAllTasks(filter);
@@ -27,9 +28,10 @@ export const getAllTasksAction = async (filter: FilterOptions): Promise<Response
 };
 
 export const createNewTaskAction = async (task: TaskFormData) => {
-	const userId = 'd85b3c83-b68e-411d-aac8-c55794c4d21e';
+	const session = await getUserSession();
+	const userId = session?.user?.id;
 
-	const { error, task: newTask } = await createNewTask(task, userId);
+	const { error, task: newTask } = await createNewTask(task, userId!);
 
 	if (error || !newTask) return { error };
 
@@ -40,9 +42,10 @@ export const createNewTaskAction = async (task: TaskFormData) => {
 };
 
 export const editTaskAction = async (taskId: string, task: TaskFormData) => {
-	const userId = 'd85b3c83-b68e-411d-aac8-c55794c4d21e';
+	const session = await getUserSession();
+	const userId = session?.user?.id;
 
-	const { error, task: updatedTask } = await updateTask(taskId, task, userId);
+	const { error, task: updatedTask } = await updateTask(taskId, task, userId!);
 
 	if (error || !updatedTask) return { error };
 
@@ -53,9 +56,10 @@ export const editTaskAction = async (taskId: string, task: TaskFormData) => {
 };
 
 export const getTaskByIdAction = async (taskId: string) => {
-	const userId = 'd85b3c83-b68e-411d-aac8-c55794c4d21e';
+	const session = await getUserSession();
+	const userId = session?.user?.id;
 
-	const { error, task } = await getTaskById(taskId, userId);
+	const { error, task } = await getTaskById(taskId, userId!);
 
 	if (error || !task) return { error };
 
@@ -66,9 +70,10 @@ export const getTaskByIdAction = async (taskId: string) => {
 };
 
 export const deleteTaskByIdAction = async (taskId: string) => {
-	const userId = 'd85b3c83-b68e-411d-aac8-c55794c4d21e';
+	const session = await getUserSession();
+	const userId = session?.user?.id;
 
-	const { error, task } = await deleteTaskById(taskId, userId);
+	const { error, task } = await deleteTaskById(taskId, userId!);
 
 	revalidatePath('/');
 
