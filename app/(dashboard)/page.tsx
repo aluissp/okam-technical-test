@@ -53,17 +53,26 @@ export default async function DashboardPage() {
 									</Link>
 								</td>
 								<td className='px-4 py-2'>
-									<Link href='#' className='hover:bg-primary py-1 px-1 rounded'>
+									<Link
+										href={`/task/edit-task/${task.id}`}
+										className='hover:bg-primary py-1 px-1 rounded'
+									>
 										Edit
 									</Link>
 								</td>
 								<td className='px-4 py-2'>
-									<Link href='#' className='hover:bg-danger py-1 px-1 rounded'>
+									<Link
+										href={`/task/delete-task/${task.id}`}
+										className='hover:bg-danger py-1 px-1 rounded'
+									>
 										Delete
 									</Link>
 								</td>
 								<td className='px-4 py-2'>
-									<Link href='#' className='hover:bg-zinc-800 py-1 px-1 rounded'>
+									<Link
+										href={`/task/history/${task.id}`}
+										className='hover:bg-zinc-800 py-1 px-1 rounded'
+									>
 										History
 									</Link>
 								</td>
