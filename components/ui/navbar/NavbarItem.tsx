@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 interface Props {
 	name: string;
@@ -12,6 +12,10 @@ interface Props {
 
 export const NavbarItem = ({ name, href, icon }: Props) => {
 	const pathName = usePathname();
+	const searchParams = useSearchParams();
+	let params = pathName;
+
+	if (searchParams.toString()) params += '?' + searchParams.toString();
 
 	return (
 		<Link
@@ -20,7 +24,7 @@ export const NavbarItem = ({ name, href, icon }: Props) => {
 			className={clsx(
 				'flex items-center gap-2 px-2 font-semibold hover:text-primary transition-colors',
 				{
-					'text-primary underline': pathName === href,
+					'text-primary underline': params === href,
 				}
 			)}
 		>
