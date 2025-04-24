@@ -58,7 +58,7 @@ export const TaskTable = ({ tasks }: Props) => {
 							</Link>
 						</td>
 						<td className='px-4 py-2'>
-							<TaskDeleteButton taskId={task.id} />
+							<TaskDeleteButton taskId={task.id} isDeleted={task.deleted} />
 						</td>
 						<td className='px-4 py-2'>
 							<Link
