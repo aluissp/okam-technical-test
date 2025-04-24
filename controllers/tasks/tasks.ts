@@ -4,6 +4,7 @@ import { TaskFormData } from '@/interfaces/models/task.interface';
 import { filterOptions, FilterOptions } from '@/utils/filter-options';
 
 export const getAllTasks = async (
+	organizationId: string,
 	filter?: FilterOptions
 ): Promise<{ tasks?: Task[]; error?: string }> => {
 	let whereClause;
@@ -15,10 +16,12 @@ export const getAllTasks = async (
 	else if (filter === filterOptions.deleted) whereClause = { deleted: true };
 
 	try {
-		const tasks = await prisma.task.findMany({
-			where: whereClause,
-			include: { user: true },
+		// get all tasks by organizationId
+		const userWithTasks = await prisma.user.findMany({
+			where: { organizationId },
+			select: { tasks: { where: whereClause } },
 		});
+		const tasks = userWithTasks.flatMap(user => user.tasks);
 		return { tasks };
 	} catch (_error) {
 		return { error: 'Error retrieving tasks' };

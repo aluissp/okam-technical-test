@@ -15,7 +15,9 @@ import { revalidatePath } from 'next/cache';
 import { getUserSession } from '../auth';
 
 export const getAllTasksAction = async (filter: FilterOptions): Promise<Response<ParsedTask[]>> => {
-	const { tasks, error } = await getAllTasks(filter);
+	const session = await getUserSession();
+	const organizationId = session?.user?.organizationId;
+	const { tasks, error } = await getAllTasks(organizationId!, filter);
 
 	if (error || !tasks) return { data: [], error };
 
