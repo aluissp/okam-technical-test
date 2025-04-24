@@ -1,9 +1,12 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
+import { redirect } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Title } from '@/components/ui/title/Title';
 import { NewTask, newTaskSchema } from '@/interfaces/models/task.interface';
+import { createNewTaskAction } from '@/actions/tasks/tasks';
 
 export default function NewTaskPage() {
 	const {
@@ -13,7 +16,15 @@ export default function NewTaskPage() {
 	} = useForm<NewTask>({ resolver: zodResolver(newTaskSchema) });
 
 	const handleCreateNewTask = async (data: NewTask) => {
-		console.log('data', data);
+		const { error, message } = await createNewTaskAction(data);
+
+		if (error) {
+			toast.error(error);
+			return;
+		}
+
+		toast.success(message);
+		redirect('/');
 	};
 	return (
 		<>
@@ -26,6 +37,7 @@ export default function NewTaskPage() {
 				<div className='flex flex-col mb-2'>
 					<label htmlFor='title'>Title</label>
 					<input
+						id='title'
 						type='text'
 						className='p-2 border rounded-md bg-gray-200 text-dark'
 						{...register('title')}
@@ -38,6 +50,7 @@ export default function NewTaskPage() {
 				<div className='flex flex-col mb-2'>
 					<label htmlFor='description'>Description</label>
 					<input
+						id='description'
 						type='text'
 						className='p-2 border rounded-md bg-gray-200 text-dark'
 						{...register('description')}
@@ -50,6 +63,7 @@ export default function NewTaskPage() {
 				<div className='flex flex-col mb-2'>
 					<label htmlFor='dueDate'>Due date</label>
 					<input
+						id='dueDate'
 						type='date'
 						className='p-2 border rounded-md bg-gray-200 text-dark'
 						{...register('dueDate')}
@@ -62,6 +76,7 @@ export default function NewTaskPage() {
 				<div className='flex gap-2  mb-2 justify-start items-center'>
 					<label htmlFor='completed'>Completed</label>
 					<input
+						id='completed'
 						type='checkbox'
 						className='p-2 border rounded-md bg-gray-200 text-dark'
 						{...register('completed')}
