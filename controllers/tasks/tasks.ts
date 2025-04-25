@@ -20,7 +20,7 @@ export const getAllTasks = async (
 		// get all tasks by organizationId
 		const userWithTasks = await prisma.user.findMany({
 			where: { organizationId },
-			select: { tasks: { where: whereClause } },
+			select: { tasks: { where: whereClause, include: { user: true } } },
 		});
 		const tasks = userWithTasks.flatMap(user => user.tasks);
 		return { tasks };
